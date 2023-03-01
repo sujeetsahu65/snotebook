@@ -1,10 +1,18 @@
-import React from 'react'
+import React from 'react';
+import Notes from './Notes';
+
 
 function Home() {
+
   return (
     <>
+    <div className="container">
     
-    This is home</>
+<Notes></Notes>
+    </div>
+
+    
+    </>
   )
 }
 
