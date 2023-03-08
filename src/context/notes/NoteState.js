@@ -1,106 +1,147 @@
-import { useEffect, useState } from 'react';
+import {  useState,useEffect } from 'react';
 import NoteContext from './NoteContext';
 
 // we will provide NoteContext all of our states which we can draw from any conponents by importing useContext
 
-const NoteState = (props)=>{
+const NoteState = (props) =>
+{
+  let endpoint = "http://localhost:5000";
 
-const note = 
-   [
-    {
-      "_id": "63f2471f6891aa6d395e3daf5",
-      "user": "63f20c9fb25e2dd102370f97",
-      "title": "Monday Task",
-      "description": "Lorem ipsum, dolor sit amet consectetur adipisicing elit. Dolorum cumque dicta at provident quisquam voluptatem. Suscipit cupiditate labore veniam quaerat enim deleniti, sint est molestias id maiores ex! Facilis, molestiae.",
-      "tag": "Important",
-      "date": "2023-02-19T15:58:23.450Z",
-      "__v": 0
-    },
-    {
-      "_id": "63f2471f6891aa6d395e3daf4",
-      "user": "63f20c9fb25e2dd102370f97",
-      "title": "Monday Task",
-      "description": "Lorem ipsum, dolor sit amet consectetur adipisicing elit. Dolorum cumque dicta at provident quisquam voluptatem. Suscipit cupiditate labore veniam quaerat enim deleniti, sint est molestias id maiores ex! Facilis, molestiae.",
-      "tag": "Important",
-      "date": "2023-02-19T15:58:23.450Z",
-      "__v": 0
-    },
-    {
-      "_id": "63f2471f6891aa6d395e3daf3",
-      "user": "63f20c9fb25e2dd102370f97",
-      "title": "Monday Task",
-      "description": "Lorem ipsum, dolor sit amet consectetur adipisicing elit. Dolorum cumque dicta at provident quisquam voluptatem. Suscipit cupiditate labore veniam quaerat enim deleniti, sint est molestias id maiores ex! Facilis, molestiae.",
-      "tag": "Important",
-      "date": "2023-02-19T15:58:23.450Z",
-      "__v": 0
-    },
-    {
-      "_id": "63f2471f6891aa6d395e3daf2",
-      "user": "63f20c9fb25e2dd102370f97",
-      "title": "Monday Task",
-      "description": "Lorem ipsum, dolor sit amet consectetur adipisicing elit. Dolorum cumque dicta at provident quisquam voluptatem. Suscipit cupiditate labore veniam quaerat enim deleniti, sint est molestias id maiores ex! Facilis, molestiae.",
-      "tag": "Important",
-      "date": "2023-02-19T15:58:23.450Z",
-      "__v": 0
-    },
-    {
-      "_id": "63f2471f6891aa6d395e3daf1",
-      "user": "63f20c9fb25e2dd102370f97",
-      "title": "Monday Task",
-      "description": "Lorem ipsum, dolor sit amet consectetur adipisicing elit. Dolorum cumque dicta at provident quisquam voluptatem. Suscipit cupiditate labore veniam quaerat enim deleniti, sint est molestias id maiores ex! Facilis, molestiae.",
-      "tag": "Important",
-      "date": "2023-02-19T15:58:23.450Z",
-      "__v": 0
-    }
-  ];
+  const [editableNote, setEditableNote] = useState({title: "", description: "",tag:"" });
+  const [mode, setMode] = useState("add");
+  const [notes, setNote] = useState([])
+
+  // let url = `http://localhost:5000/api/notes/updatenotes/${id}`;
+
+  const getNotes = async () =>
+  {
+
+    let url = `${endpoint}/api/notes/fetchnotes`;
+    let notesData = await fetch(url, {
+      // Adding method type---
+      method: "GET",
+
+      // body: JSON.stringify({
+      //   title: "foo",
+      //   body: "bar",
+      //   userId: 1,
+      // }),
+      headers: {
+        "Content-type": "X-Requested-With,content-type",
+        "auth-token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjNmMjBjOWZiMjVlMmRkMTAyMzcwZjk3In0sImlhdCI6MTY3NjgwNzQyN30.72NuvG224FZJeid0VT74eNGj7zEBtmArsbL6soLAHyM"
+      }
+    });
+
+    let json = await notesData.json();
+    // let parseNote = await JSON.parse(json).notes
+    // let res = updatePoint.then((res)=>res.json()).then((data)=>console.log(data.notes));
+    // console.log(JSON.parse(json).notes);
+    // console.log(json.notes);
+    setNote(json.notes);
+
+  }
 
 
-const [notes, setNote] = useState(note)
+  
 
-// const refresh = ()=>{
-
-// setTimeout(() => {
-//     setState({"name":"ved","class":"3rd"});
-// }, 2000);
-
-// }
+  // getNotes();
 
 
-/*
-{state, refresh} is an object where the value of state is state and refresh's refresh(kind of destructuring)
-*/
 
-// Adding A Note====
-const addNote = async(newNote)=>{
-// await setNote(note.push(newNote));
-await setNote(notes.concat(newNote));
 
-let body = notes;
+
+  // const refresh = ()=>{
+
+  // setTimeout(() => {
+  //     setState({"name":"ved","class":"3rd"});
+  // }, 2000);
+
+  // }
+
+
+  /*
+  {state, refresh} is an object where the value of state is state and refresh's refresh(kind of destructuring)
+  */
+
+  // Adding A Note====
+  const addNote = async (newNote) =>
+  {
+    // await setNote(note.push(newNote));
+    // console.log(note);
+    // setNote(notes.concat(newNote));
+
+    // let body = notes;
     // let url = "http://localhost:5000/api/notes/createnotes";
     // fetch(url,body).then((res)=>console.log(res.json()));
-}
 
-useEffect(()=>{
-    console.log(notes)
-})
+    let url = `${endpoint}/api/notes/createnotes`;
+    let isSaved = await fetch(url, {
+      // Adding method type---
+      method: "POST",
 
-// Editing A Note====
-const editNote =(id)=>{
-    
-}
+      body: JSON.stringify(newNote),
+      headers: {
+        "Content-type": "application/json",
+        "auth-token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjNmMjBjOWZiMjVlMmRkMTAyMzcwZjk3In0sImlhdCI6MTY3NjgwNzQyN30.72NuvG224FZJeid0VT74eNGj7zEBtmArsbL6soLAHyM"
+      }
+    });
+    // console.log(await notesData.json());
+    //  console.log(await notesData.json());
+    // console.log(notesData.status);
+    if (isSaved.status === 200)
+    {
+      // console.log(notesData.status);
+      getNotes();
+    }
 
-// Deleting A Note====
-const deleteNote =(id)=>{
-    
-}
+  }
 
-return <>
-        <NoteContext.Provider value={{notes,setNote,addNote,editNote,deleteNote}}>
-            {/* the values cant be comma separated you know, you need to pass one single entity thus we provided object */}
-            {props.children}
-        </NoteContext.Provider>
 
-        </>
+  // Editing A Note====
+  const handleEdit = (id) =>
+  {
+    setMode("edit");
+    let thisNote = notes.filter((val) => { return val._id === id })
+    setEditableNote(thisNote);
+  }
+  // Editing A Note====
+  const editNote = async (newNote) =>
+  {
+    await setNote(notes.concat(newNote));
+    setMode("add");
+  }
+
+  // Deleting A Note====
+  const deleteNote = async (id) =>
+  {
+    // console.log("the delete note id is:"+id);
+    // setNote(notes.filter((el)=>{return el._id !==id})); 
+
+    let url = `${endpoint}/api/notes/deletenotes/${id}`;
+    let isDeleted = await fetch(url, {
+      // Adding method type---
+      method: "DELETE",
+      headers: {
+        "Content-type": "application/json",
+        "auth-token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjNmMjBjOWZiMjVlMmRkMTAyMzcwZjk3In0sImlhdCI6MTY3NjgwNzQyN30.72NuvG224FZJeid0VT74eNGj7zEBtmArsbL6soLAHyM"
+      }
+    });
+
+
+    if (isDeleted.status === 200)
+    {
+      getNotes();
+    }
+
+  }
+
+  return <>
+    <NoteContext.Provider value={{ notes, setNote, addNote, editNote, deleteNote, editableNote, mode, handleEdit,getNotes }}>
+      {/* the values cant be comma separated you know, you need to pass one single entity thus we provided object */}
+      {props.children}
+    </NoteContext.Provider>
+
+  </>
 
 
 }
