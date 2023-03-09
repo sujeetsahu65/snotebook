@@ -6,8 +6,7 @@ function Noteitem (props)
 {
     const cntx = useContext(NoteContext);
     const { handleEdit, deleteNote } = cntx;
-    const { note,updateNote } = props;
-    console.log('nhhn');
+    const { note,onEdit } = props;
     // console.log(note._id);
     // console.log(note.description);
     return (
@@ -26,7 +25,7 @@ function Noteitem (props)
 
                         <div className='col-6 row'>
                             <div className='col-6'>
-                                <button><i className="fa-solid fa-pen-to-square" onClick={() => { updateNote(note) }}></i></button>
+                                <button><i className="fa-solid fa-pen-to-square" onClick={() => { onEdit(note) }}></i></button>
 
                             </div>
                             <div className='col-6'>

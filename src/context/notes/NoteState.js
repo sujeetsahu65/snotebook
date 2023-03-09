@@ -1,4 +1,4 @@
-import {  useState,useEffect } from 'react';
+import { useState } from 'react';
 import NoteContext from './NoteContext';
 
 // we will provide NoteContext all of our states which we can draw from any conponents by importing useContext
@@ -7,8 +7,6 @@ const NoteState = (props) =>
 {
   let endpoint = "http://localhost:5000";
 
-  const [editableNote, setEditableNote] = useState({title: "", description: "",tag:"" });
-  const [mode, setMode] = useState("add");
   const [notes, setNote] = useState([])
 
   // let url = `http://localhost:5000/api/notes/updatenotes/${id}`;
@@ -40,14 +38,6 @@ const NoteState = (props) =>
     setNote(json.notes);
 
   }
-
-
-  
-
-  // getNotes();
-
-
-
 
 
   // const refresh = ()=>{
@@ -96,19 +86,29 @@ const NoteState = (props) =>
 
   }
 
+  // Editing A Note====
+  const editNote = async (note) =>
+  {
+    // await setNote(notes.concat(newNote));
+    // setMode("add");
+    let url = `${endpoint}/api/notes/updatenotes/${note._id}`;
+    let isUpdated = await fetch(url, {
+      // Adding method type---
+      method: "PUT",
+      body: JSON.stringify(note),
+      headers: {
+        "Content-type": "application/json",
+        "auth-token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjNmMjBjOWZiMjVlMmRkMTAyMzcwZjk3In0sImlhdCI6MTY3NjgwNzQyN30.72NuvG224FZJeid0VT74eNGj7zEBtmArsbL6soLAHyM"
+      }
+    });
 
-  // Editing A Note====
-  const handleEdit = (id) =>
-  {
-    setMode("edit");
-    let thisNote = notes.filter((val) => { return val._id === id })
-    setEditableNote(thisNote);
-  }
-  // Editing A Note====
-  const editNote = async (newNote) =>
-  {
-    await setNote(notes.concat(newNote));
-    setMode("add");
+
+    if (isUpdated.status === 200)
+    {
+      getNotes();
+    }
+
+
   }
 
   // Deleting A Note====
@@ -136,7 +136,7 @@ const NoteState = (props) =>
   }
 
   return <>
-    <NoteContext.Provider value={{ notes, setNote, addNote, editNote, deleteNote, editableNote, mode, handleEdit,getNotes }}>
+    <NoteContext.Provider value={{ notes, setNote, addNote, editNote, deleteNote, getNotes }}>
       {/* the values cant be comma separated you know, you need to pass one single entity thus we provided object */}
       {props.children}
     </NoteContext.Provider>

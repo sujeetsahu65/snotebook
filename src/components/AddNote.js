@@ -4,20 +4,13 @@ const AddNote =()=> {
 
 
      const cntx = useContext(NoteContext);
-const {editableNote,editNote,mode,addNote} = cntx;
+const {addNote} = cntx;
 
 const [note, setNote] = useState({title:"",description:"",tag:""});
 
-const onSubmit = (e,mode)=>{
+const onSubmit = (e)=>{
     // e.preventDefault();
-    if(mode ==="edit"){
-      editNote(note)
-    }
-    else{
-      // console.log(note);
-     addNote(note);
-
-    }
+  addNote(note);
     
 }
 
@@ -44,7 +37,7 @@ setNote({...note,[e.target.name]:e.target.value});
   <input type="tag" className="form-control" id="tag" placeholder=""  name='tag' onChange={onChange} /*value={editableNote.title}*//>
 </div>
 <div className="col-6">
-<button type="button" className="btn btn-primary" onClick={()=>{onSubmit(this,mode)}}>Submit</button>
+<button type="button" className="btn btn-primary" onClick={onSubmit}>Submit</button>
 
 </div>
    </div>
